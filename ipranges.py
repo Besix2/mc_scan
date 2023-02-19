@@ -1,4 +1,5 @@
-def range_8_16(CIDR,Range):
+def range_8_16(CIDR):
+    Range = CIDR
     if CIDR > 16 or CIDR < 8:
         print("wrong CIDR only 8-16")
         exit()
