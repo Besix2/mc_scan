@@ -1,22 +1,18 @@
 import json
+from celery import Celery
 import masscan
-import pymongo
+import subprocess
 from ipranges import range_8_16
 from colorama import Fore, init
 from task import mc_and_check_task
+import time
 #-------------------------
 init()
 red = Fore.RED
 white = Fore.WHITE
 #-------------------------
-client = pymongo.MongoClient("192.168.188.32:27017")
-if client.server_info():
-    print("Connected to MongoDB successfully!")
-else:
-    print("Could not connect to MongoDB.")
-db = client["treffer"]
-collection = db["ips"]
-#-------------------------
+subprocess.Popen(['celery', '-A', 'task', 'worker', '--loglevel=WARNING', "--uid=pi"])
+time.sleep(2)
 CIDR = 16
 exclude = list()
 f = open("exclude.txt", "r") 
@@ -24,16 +20,22 @@ for i in f:
    exclude.append(i.rstrip('\n'))
 f.close()
 while CIDR >= 8:
-    IP_ranges = range_8_16(CIDR)
+    with open("config.txt","r") as config:
+        lines = config.readlines()
+        l1 = lines[0].strip()
+        l2 = int(lines[1].strip())
+    CIDR = l1.split("/")
+    IP_ranges = range_8_16(int(CIDR[1]))
     IP_ranges = [x for x in IP_ranges if x not in exclude]
+    index = IP_ranges.index(l1)
+    IP_ranges = IP_ranges[index+1:]
     for ip_range in IP_ranges:
         print(ip_range)
         try:
             mas = masscan.PortScanner()
-            mas.scan(ip_range, ports="25565", arguments="--max-rate 100000")
+            mas.scan(ip_range, ports="25565", arguments=f"--max-rate {l2} --wait 3")
             x = json.loads(mas.scan_result)
             len_result = len(x["scan"])
-            print(len_result)
             if len_result > 0:
                 print(f"Results: {red}{len_result}{white} ")
                 for ip in x["scan"]:
@@ -45,5 +47,8 @@ while CIDR >= 8:
         except masscan.NetworkConnectionError:
             print(f"{ip_range}masscan connection error")
         print("done scanning")
+        lines[0] = f"{ip_range}\n"
+        with open("config.txt", "w") as f:
+            f.writelines(lines)
     print(f"CIDR range {red}{CIDR}{white}scanned")
     CIDR -= 1

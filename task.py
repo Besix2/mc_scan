@@ -1,15 +1,17 @@
 from celery import Celery
 import json
+import subprocess
 from mcstatus import JavaServer
 import pymongo
-app = Celery('tasks', broker='pyamqp://guest@localhost//')
-client = pymongo.MongoClient("192.168.188.32:28017")
+app = Celery('myapp', broker='pyamqp://guest@localhost//')
+client = pymongo.MongoClient("192.168.188.32:27017")
 if client.server_info():
     print("Connected to MongoDB successfully!")
 else:
     print("Could not connect to MongoDB.")
 db = client["treffer"]
 collection = db["ips"]
+
 @app.task
 def mc_and_check_task(ip):
     host = JavaServer.lookup(ip)
