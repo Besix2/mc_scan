@@ -1,0 +1,30 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:bionic
+    container_name: mongo-container
+    restart: always
+    ports:
+      - 27017:27017
+    networks:
+      - scanner_network
+  rabbitmq:
+    image: rabbitmq
+    container_name: rabbitmq-container
+    restart: always
+    ports:
+      - 5672:5672
+    networks:
+      - scanner_network
+  scanner:
+    image: besix2/mc_scanner:latest
+    container_name: scanner
+    restart: always
+    volumes:
+      - ./paused.txt:/app/paused.txt
+      - ./config.txt:/app/config.txt
+    networks:
+      - scanner_network
+networks:
+  scanner_network:
+    driver: bridge
