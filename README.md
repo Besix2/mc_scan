@@ -4,7 +4,7 @@
 
 
 <div align="center">
-  <img src="https://img.shields.io/bitbucket/issues/Besix2/mc_scan" alt="Bitbucket open issues">
+  <img src="https://img.shields.io/github/issues/Besix2/mc_scan" alt="GitHub open issues">
   <img src="https://img.shields.io/github/last-commit/Besix2/mc_scan" alt="GitHub last commit">
   <img src="https://img.shields.io/github/commit-activity/m/Besix2/mc_scan" alt="GitHub commit activity">
   <img src="https://img.shields.io/github/stars/Besix2/mc_scan" alt="GitHub Repo stars">
