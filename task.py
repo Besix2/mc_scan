@@ -1,10 +1,13 @@
 from celery import Celery
 import json
 import subprocess
+import socket
 from mcstatus import JavaServer
 import pymongo
+
+ip_address = socket.gethostbyname(hostname)
 app = Celery('myapp', broker='pyamqp://guest@localhost//')
-client = pymongo.MongoClient("192.168.188.32:27017")
+client = pymongo.MongoClient(f"{ip_adress}:27017")
 if client.server_info():
     print("Connected to MongoDB successfully!")
 else:
