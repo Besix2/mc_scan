@@ -4,7 +4,7 @@ import subprocess
 from mcstatus import JavaServer
 import pymongo
 app = Celery('myapp', broker='pyamqp://guest@localhost//')
-client = pymongo.MongoClient("192.168.188.32:27017")
+client = pymongo.MongoClient("--ip--:27017")
 if client.server_info():
     print("Connected to MongoDB successfully!")
 else:
