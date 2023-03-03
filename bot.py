@@ -1,16 +1,22 @@
+import socket
 import pymongo
 import lightbulb
 import hikari
 
-client = pymongo.MongoClient("192.168.188.32:27017")
+hostname = socket.gethostname()
+ip_address = socket.gethostbyname(hostname)
+
+client = pymongo.MongoClient(f"{ip_adress}:28017")
 db = client["treffer"]
 collection = db["ips"]
+if client.server_info():
+    print("Connected to MongoDB successfully!")
+else:
+    print("Could not connect to MongoDB.")
 v_list = ["1.19.3", "1.19.2", "1.19.1", "1.19", "1.18.2", "1.18.1", "1.18", "1.17.1", "1.17", "1.16.5", "1.16.4", "1.16.3", "1.16.2", "1.16.1", "1.16", "1.15.2", "1.15.1", "1.15", "1.14.4", "1.14.3", "1.14.2", "1.14.1", "1.14", "1.13.2", "1.13.1", "1.13", "1.12.2", "1.12.1", "1.12", "1.11.2", "1.11.1", "1.11", "1.10.2", "1.10.1", "1.10", "1.9.4", "1.9.3", "1.9.2", "1.9.1", "1.9", "1.8.9"]
-with open("passwd.txt") as file:
-    lines = file.readlines()
-    l1 = lines[1].strip()
 
-bot = lightbulb.BotApp(token=l1, default_enabled_guilds=705112505005113415)
+
+bot = lightbulb.BotApp(token="your-toke-here")
 rounds = 0
 last_version = ""
 
@@ -24,6 +30,7 @@ async def add(ctx):
         await ctx.respond("Wrong input for version number")
     else:
         if version[0] == "1":
+            print(version)
             results = collection.find({"status.version.name": version})
             ip_list = [i["ip"] for i in results]
             await ctx.respond(f"There are {len(ip_list)} Server with the version {version}")
@@ -67,4 +74,3 @@ async def add(ctx):
 
 
 bot.run()
-
