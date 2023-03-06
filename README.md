@@ -13,6 +13,12 @@
 
 ### Installation
 
+requirements: 
+
+```
+docker  
+docker-compose
+```
 Clone the Repository
 ``` 
 https://github.com/Besix2/mc_scan.git
