@@ -25,8 +25,18 @@ services:
       - ./config.txt:/app/config.txt
     networks:
       - scanner_network
-    depends_on:
+     depends_on:
+      - mongo
       - rabbitmq
+  bot:
+    image: besix2/scanner_bot
+    container_name: bot
+    restart: always
+    volumes:
+      - ./config.txt:/app/config.txt
+    networks:
+      - scanner_network
+    depends_on:
       - mongo
 networks:
   scanner_network:

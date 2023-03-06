@@ -1,2 +1,3 @@
 35000
 3
+--your discord token--
